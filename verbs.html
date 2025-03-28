@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Irregular Verb Quiz</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f7;
+            color: #333;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .file-input {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .quiz-container {
+            margin-top: 20px;
+        }
+        .verb-prompt {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #0066cc;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0055aa;
+        }
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            display: none;
+        }
+        .correct {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .stats {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+        .hidden {
+            display: none;
+        }
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .mode-button {
+            background-color: #f5f5f7;
+            color: #333;
+            border: 1px solid #ddd;
+            margin: 0 5px;
+            padding: 8px 16px;
+        }
+        .mode-button.active {
+            background-color: #0066cc;
+            color: white;
+        }
+        .correct-answer {
+            margin-top: 10px;
+            color: #721c24;
+            font-weight: bold;
+        }
+        .file-status {
+            margin-top: 10px;
+            font-style: italic;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Irregular Verb Quiz</h1>
+        
+        <div class="file-input">
+            <p>Load verbs from file:</p>
+            <input type="file" id="verb-file" accept=".txt">
+            <div id="file-status" class="file-status">Looking for irregular_verbs.txt...</div>
+        </div>
+        
+        <div class="mode-selector">
+            <button id="v1-mode" class="mode-button active">English → Forms</button>
+            <button id="ru-mode" class="mode-button">Russian → Forms</button>
+        </div>
+        
+        <div id="quiz-container" class="quiz-container">
+            <div class="verb-prompt" id="verb-prompt">Loading...</div>
+            
+            <div id="v1-quiz-form">
+                <div class="form-group">
+                    <label for="v2-input">Past Simple (V2):</label>
+                    <input type="text" id="v2-input" placeholder="Enter past simple form">
+                </div>
+                <div class="form-group">
+                    <label for="v3-input">Past Participle (V3):</label>
+                    <input type="text" id="v3-input" placeholder="Enter past participle form">
+                </div>
+            </div>
+            
+            <div id="ru-quiz-form" class="hidden">
+                <div class="form-group">
+                    <label for="v1-input">Infinitive (V1):</label>
+                    <input type="text" id="v1-input" placeholder="Enter infinitive form">
+                </div>
+                <div class="form-group">
+                    <label for="v2-input-ru">Past Simple (V2):</label>
+                    <input type="text" id="v2-input-ru" placeholder="Enter past simple form">
+                </div>
+                <div class="form-group">
+                    <label for="v3-input-ru">Past Participle (V3):</label>
+                    <input type="text" id="v3-input-ru" placeholder="Enter past participle form">
+                </div>
+            </div>
+            
+            <button id="check-button">Check Answer</button>
+            
+            <div id="feedback" class="feedback"></div>
+            <div id="correct-answer" class="correct-answer hidden"></div>
+        </div>
+        
+        <div class="stats">
+            <p>Score: <span id="score">0</span> correct out of <span id="total">0</span> (<span id="percentage">0%</span>)</p>
+        </div>
+    </div>
+
+    <script>
+        // Default verbs in case file loading fails
+        let verbs = [
+            "be - was/were - been - быть",
+            "do - did - done - делать",
+            "go - went - gone - идти",
+            "have - had - had - иметь",
+            "say - said - said - говорить"
+        ];
+
+        // Parse the verbs into a structured array
+        let parsedVerbs = [];
+        
+        // Quiz state
+        let currentVerb = null;
+        let currentMode = 'v1'; // 'v1' or 'ru'
+        let score = 0;
+        let total = 0;
+        
+        // DOM elements
+        const verbPrompt = document.getElementById('verb-prompt');
+        const v1QuizForm = document.getElementById('v1-quiz-form');
+        const ruQuizForm = document.getElementById('ru-quiz-form');
+        const v1ModeButton = document.getElementById('v1-mode');
+        const ruModeButton = document.getElementById('ru-mode');
+        const checkButton = document.getElementById('check-button');
+        const feedback = document.getElementById('feedback');
+        const correctAnswer = document.getElementById('correct-answer');
+        const scoreElement = document.getElementById('score');
+        const totalElement = document.getElementById('total');
+        const percentageElement = document.getElementById('percentage');
+        const fileInput = document.getElementById('verb-file');
+        const fileStatus = document.getElementById('file-status');
+        
+        // Try to load the irregular_verbs.txt file automatically
+        function tryLoadDefaultFile() {
+            fetch('irregular_verbs.txt')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('File not found');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    processVerbFile(data);
+                    fileStatus.textContent = 'Successfully loaded irregular_verbs.txt';
+                })
+                .catch(error => {
+                    console.error('Error loading default file:', error);
+                    fileStatus.textContent = 'No default file found. Please select a verb file.';
+                    parseVerbs(verbs);
+                });
+        }
+        
+        // Process the verb file contents
+        function processVerbFile(content) {
+            const lines = content.split('\n');
+            const validLines = lines.filter(line => line.trim() !== '' && line.includes(' - '));
+            
+            if (validLines.length > 0) {
+                verbs = validLines;
+                parseVerbs(verbs);
+                fileStatus.textContent = `Loaded ${verbs.length} verbs successfully.`;
+            } else {
+                fileStatus.textContent = 'Invalid file format. Using default verbs.';
+                parseVerbs(verbs);
+            }
+        }
+        
+        // Parse verbs into structured format
+        function parseVerbs(verbList) {
+            parsedVerbs = verbList.map(verb => {
+                const parts = verb.split(' - ');
+                if (parts.length >= 4) {
+                    return {
+                        v1: parts[0].trim(),
+                        v2: parts[1].trim(),
+                        v3: parts[2].trim(),
+                        ru: parts[3].trim()
+                    };
+                }
+                return null;
+            }).filter(v => v !== null);
+            
+            // Start/restart the quiz with new verbs
+            loadNextVerb();
+        }
+        
+        // Initialize quiz
+        function initQuiz() {
+            // Try to load default file
+            tryLoadDefaultFile();
+            
+            // Handle manual file selection
+            fileInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    fileStatus.textContent = `Reading ${file.name}...`;
+                    
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const content = e.target.result;
+                        processVerbFile(content);
+                    };
+                    reader.onerror = () => {
+                        fileStatus.textContent = 'Error reading file. Using default verbs.';
+                        parseVerbs(verbs);
+                    };
+                    reader.readAsText(file);
+                }
+            });
+            
+            // Add event listeners
+            checkButton.addEventListener('click', checkAnswer);
+            v1ModeButton.addEventListener('click', () => setMode('v1'));
+            ruModeButton.addEventListener('click', () => setMode('ru'));
+            
+            // Improved key handling
+            document.addEventListener('keydown', handleKeyPress);
+        }
+        
+        // Handle key presses
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                // If in V1 mode and focus is on V2 input, move to V3 input
+                if (currentMode === 'v1' && document.activeElement === document.getElementById('v2-input')) {
+                    e.preventDefault();
+                    document.getElementById('v3-input').focus();
+                    return;
+                }
+                
+                // If in RU mode and focus is on V1 input, move to V2 input
+                if (currentMode === 'ru' && document.activeElement === document.getElementById('v1-input')) {
+                    e.preventDefault();
+                    document.getElementById('v2-input-ru').focus();
+                    return;
+                }
+                
+                // If in RU mode and focus is on V2 input, move to V3 input
+                if (currentMode === 'ru' && document.activeElement === document.getElementById('v2-input-ru')) {
+                    e.preventDefault();
+                    document.getElementById('v3-input-ru').focus();
+                    return;
+                }
+                
+                // Otherwise, check the answer
+                checkAnswer();
+            }
+        }
+        
+        // Set quiz mode
+        function setMode(mode) {
+            currentMode = mode;
+            
+            if (mode === 'v1') {
+                v1ModeButton.classList.add('active');
+                ruModeButton.classList.remove('active');
+                v1QuizForm.classList.remove('hidden');
+                ruQuizForm.classList.add('hidden');
+            } else {
+                v1ModeButton.classList.remove('active');
+                ruModeButton.classList.add('active');
+                v1QuizForm.classList.add('hidden');
+                ruQuizForm.classList.remove('hidden');
+            }
+            
+            loadNextVerb();
+        }
+        
+        // Load next verb
+        function loadNextVerb() {
+            // If no verbs are loaded yet, show a message
+            if (parsedVerbs.length === 0) {
+                verbPrompt.textContent = "Waiting for verbs to load...";
+                return;
+            }
+            
+            // Clear previous feedback
+            feedback.style.display = 'none';
+            correctAnswer.classList.add('hidden');
+            
+            // Clear input fields
+            document.getElementById('v2-input').value = '';
+            document.getElementById('v3-input').value = '';
+            document.getElementById('v1-input').value = '';
+            document.getElementById('v2-input-ru').value = '';
+            document.getElementById('v3-input-ru').value = '';
+            
+            // Get random verb
+            const randomIndex = Math.floor(Math.random() * parsedVerbs.length);
+            currentVerb = parsedVerbs[randomIndex];
+            
+            // Update prompt based on mode
+            if (currentMode === 'v1') {
+                verbPrompt.textContent = currentVerb.v1;
+                document.getElementById('v2-input').focus();
+            } else {
+                verbPrompt.textContent = currentVerb.ru;
+                document.getElementById('v1-input').focus();
+            }
+        }
+        
+        // Check user's answer
+        function checkAnswer() {
+            if (!currentVerb) return;
+            
+            let isCorrect = false;
+            
+            if (currentMode === 'v1') {
+                const v2Input = document.getElementById('v2-input').value.trim();
+                const v3Input = document.getElementById('v3-input').value.trim();
+                
+                isCorrect = checkVerbForms(v2Input, currentVerb.v2) && 
+                           checkVerbForms(v3Input, currentVerb.v3);
+                
+                if (!isCorrect) {
+                    correctAnswer.textContent = `Correct answer: ${currentVerb.v2} - ${currentVerb.v3}`;
+                }
+            } else {
+                const v1Input = document.getElementById('v1-input').value.trim();
+                const v2Input = document.getElementById('v2-input-ru').value.trim();
+                const v3Input = document.getElementById('v3-input-ru').value.trim();
+                
+                isCorrect = checkVerbForms(v1Input, currentVerb.v1) && 
+                           checkVerbForms(v2Input, currentVerb.v2) && 
+                           checkVerbForms(v3Input, currentVerb.v3);
+                
+                if (!isCorrect) {
+                    correctAnswer.textContent = `Correct answer: ${currentVerb.v1} - ${currentVerb.v2} - ${currentVerb.v3}`;
+                }
+            }
+            
+            // Update feedback
+            feedback.textContent = isCorrect ? "Correct!" : "Not quite right";
+            feedback.className = isCorrect ? "feedback correct" : "feedback incorrect";
+            feedback.style.display = 'block';
+            
+            if (!isCorrect) {
+                correctAnswer.classList.remove('hidden');
+            }
+            
+            // Update score
+            total++;
+            if (isCorrect) score++;
+            updateStats();
+            
+            // Load next verb after delay
+            setTimeout(() => {
+                loadNextVerb();
+            }, 2000);
+        }
+        
+        // Check if verb forms match (handling multiple possible forms)
+        function checkVerbForms(input, expected) {
+            input = input.toLowerCase();
+            expected = expected.toLowerCase();
+            
+            // Handle multiple forms separated by "/"
+            if (expected.includes('/')) {
+                const variants = expected.split('/');
+                return variants.some(variant => input === variant.trim());
+            }
+            
+            return input === expected;
+        }
+        
+        // Update statistics
+        function updateStats() {
+            scoreElement.textContent = score;
+            totalElement.textContent = total;
+            const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
+            percentageElement.textContent = `${percentage}%`;
+        }
+        
+        // Start the quiz
+        initQuiz();
+    </script>
+</body>
+</html>
