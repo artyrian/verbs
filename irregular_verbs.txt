@@ -41,7 +41,7 @@ feed - fed - fed - кормить
 feel - felt - felt - чувствовать
 fight - fought - fought - бороться
 find - found - found - находить
-flee - fled - fled - бежать
+flee - fled - fled - бежать/избегать (негативное)
 fling - flung - flung - бросать (сильно, резко)
 fly - flew - flown - летать
 forbid - forbade - forbidden - запрещать
