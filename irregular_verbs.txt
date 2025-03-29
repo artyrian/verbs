@@ -42,7 +42,7 @@ feel - felt - felt - чувствовать
 fight - fought - fought - бороться
 find - found - found - находить
 flee - fled - fled - бежать
-fling - flung - flung - бросать
+fling - flung - flung - бросать (сильно, резко)
 fly - flew - flown - летать
 forbid - forbade - forbidden - запрещать
 forget - forgot - forgotten - забывать
@@ -53,7 +53,7 @@ give - gave - given - давать
 go - went - gone - идти
 grind - ground - ground - молоть
 grow - grew - grown - расти
-hang - hung - hung - вешать
+hang - hung - hung - вешать (объекты)
 have - had - had - иметь
 hear - heard - heard - слышать
 hide - hid - hidden - прятать
@@ -71,7 +71,7 @@ leave - left - left - оставлять
 lend - lent - lent - одалживать
 let - let - let - позволять
 lie - lay - lain - лежать
-light - lit - lit - зажигать
+light - lit - lit - зажигать (огонь, свечу)
 lose - lost - lost - терять
 make - made - made - делать
 mean - meant - meant - значить
@@ -81,19 +81,19 @@ put - put - put - класть
 read - read - read - читать
 ride - rode - ridden - ездить верхом
 ring - rang - rung - звонить
-rise - rose - risen - подниматься
+rise - rose - risen - подниматься (самостоятельно, без внешней силы)
 run - ran - run - бежать
 say - said - said - говорить
 see - saw - seen - видеть
 seek - sought - sought - искать
 sell - sold - sold - продавать
 send - sent - sent - отправлять
-set - set - set - устанавливать
+set - set - set - устанавливать, ставить что-либо
 sew - sewed - sewn/sewed - шить
 shake - shook - shaken - трясти
 shine - shone - shone - светить
 shoot - shot - shot - стрелять
-show - showed - shown - показывать
+show - showed - shown/showed - показывать
 shrink - shrank - shrunk - сжиматься
 shut - shut - shut - закрывать
 sing - sang - sung - петь
@@ -103,21 +103,21 @@ sleep - slept - slept - спать
 slide - slid - slid - скользить
 smell - smelt/smelled - smelt/smelled - пахнуть
 speak - spoke - spoken - говорить
-speed - sped - sped - ускорять
+speed - sped - sped - ускоряться (о движении)
 spend - spent - spent - тратить
 spill - spilt/spilled - spilt/spilled - проливать
 spin - spun - spun - вращать
 spit - spat - spat - плевать
 split - split - split - разделять
 spread - spread - spread - распространять
-spring - sprang - sprung - прыгать
+spring - sprang - sprung - прыгать (резко как пружина)
 stand - stood - stood - стоять
 steal - stole - stolen - красть
 stick - stuck - stuck - приклеивать
 sting - stung - stung - жалить
 stink - stank - stunk - вонять
 stride - strode - stridden - шагать
-strike - struck - struck - ударять
+strike - struck - struck/stricken - ударять (сильно, внезапно) (3ф поражённый)
 string - strung - strung - нанизывать
 strive - strove - striven - стремиться
 swear - swore - sworn - клясться
@@ -135,7 +135,7 @@ wake - woke - woken - будить
 wear - wore - worn - носить
 weep - wept - wept - плакать
 win - won - won - выигрывать
-wind - wound - wound - заводить
+wind - wound - wound - заводить (часы, механизм)
 write - wrote - written - писать
 overcome - overcame - overcome - преодолевать
 undertake - undertook - undertaken - предпринимать
