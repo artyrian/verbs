@@ -371,9 +371,11 @@
             // Update prompt based on mode
             if (currentMode === 'v1') {
                 verbPrompt.textContent = currentVerb.v1;
+                verbPrompt.title = currentVerb.v2 + ' / ' + currentVerb.v3 + ' - ' + currentVerb.ru;
                 document.getElementById('v2-input').focus();
             } else {
                 verbPrompt.textContent = currentVerb.ru;
+                verbPrompt.title = currentVerb.v1 + ' / ' + currentVerb.v2 + ' / ' + currentVerb.v3;
                 document.getElementById('v1-input').focus();
             }
         }
