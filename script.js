@@ -1,4 +1,3 @@
-// Default verbs in case file loading fails
 let verbs = [
     "be - was/were - been - быть",
     "do - did - done - делать",
@@ -7,19 +6,18 @@ let verbs = [
     "say - said - said - говорить"
 ];
 
-// Parse the verbs into a structured array
 let parsedVerbs = [];
 let availableVerbs = [];
 let correctlyAnsweredVerbs = [];
 
-// Quiz state
 let currentVerb = null;
 let currentMode = 'v1'; // 'v1' or 'ru'
 let score = 0;
 let total = 0;
 let isCheckingAnswer = false;
+let showTranslate = false;
+let showHint = false;
 
-// DOM elements
 const verbPrompt = document.getElementById('verb-prompt');
 const v1QuizForm = document.getElementById('v1-quiz-form');
 const ruQuizForm = document.getElementById('ru-quiz-form');
@@ -36,8 +34,9 @@ const fileInput = document.getElementById('verb-file');
 const fileStatus = document.getElementById('file-status');
 const excludeCorrectCheckbox = document.getElementById('exclude-correct');
 const resetStatsButton = document.getElementById('reset-stats');
+const showTranslateCheckbox = document.getElementById('show-translate');
+const showHintCheckbox = document.getElementById('show-hint');
 
-// Try to load the irregular_verbs.txt file automatically
 function tryLoadDefaultFile() {
     fetch('irregular_verbs.txt')
         .then(response => {
@@ -57,7 +56,6 @@ function tryLoadDefaultFile() {
         });
 }
 
-// Process the verb file contents
 function processVerbFile(content) {
     const lines = content.split('\n');
     const validLines = lines.filter(line => line.trim() !== '' && line.includes(' - '));
@@ -72,7 +70,6 @@ function processVerbFile(content) {
     }
 }
 
-// Parse verbs into structured format
 function parseVerbs(verbList) {
     parsedVerbs = verbList.map((verb, index) => {
         const parts = verb.split(' - ');
@@ -90,11 +87,9 @@ function parseVerbs(verbList) {
     
     resetAvailableVerbs();
     
-    // Start/restart the quiz with new verbs
     loadNextVerb();
 }
 
-// Reset available verbs
 function resetAvailableVerbs() {
     availableVerbs = [...parsedVerbs];
     correctlyAnsweredVerbs = [];
@@ -106,19 +101,49 @@ function resetAvailableVerbs() {
     updateRemainingCount();
 }
 
-// Update count of remaining verbs
 function updateRemainingCount() {
     if (remainingVerbsElement) {
         remainingVerbsElement.textContent = availableVerbs.length;
     }
 }
 
-// Initialize quiz
+function toggleTranslate() {
+    showTranslate = showTranslateCheckbox.checked;
+    updateVerbPrompt();
+}
+
+function toggleHint() {
+    showHint = showHintCheckbox.checked;
+    updateVerbPrompt();
+}
+
+function updateVerbPrompt() {
+    if (!currentVerb) return;
+    
+    verbPrompt.title = '';
+    
+    if (currentMode === 'v1') {
+        if (showTranslate) {
+            verbPrompt.title = showHint 
+                ? `${currentVerb.v2} / ${currentVerb.v3} - ${currentVerb.ru}`
+                : `${currentVerb.ru}`;
+        } else if (showHint) {
+            verbPrompt.title = `${currentVerb.v2} / ${currentVerb.v3}`;
+        }
+    } else {
+        if (showHint) {
+            verbPrompt.title = showTranslate 
+                ? `${currentVerb.v1} / ${currentVerb.v2} / ${currentVerb.v3} - ${currentVerb.ru}`
+                : `${currentVerb.v1} / ${currentVerb.v2} / ${currentVerb.v3}`;
+        } else if (showTranslate) {
+            verbPrompt.title = `${currentVerb.v1}`;
+        }
+    }
+}
+
 function initQuiz() {
-    // Try to load default file
     tryLoadDefaultFile();
     
-    // Handle manual file selection
     fileInput.addEventListener('change', (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -137,22 +162,19 @@ function initQuiz() {
         }
     });
     
-    // Add event listeners
     checkButton.addEventListener('click', checkAnswer);
     v1ModeButton.addEventListener('click', () => setMode('v1'));
     ruModeButton.addEventListener('click', () => setMode('ru'));
     excludeCorrectCheckbox.addEventListener('change', toggleExcludeCorrect);
     resetStatsButton.addEventListener('click', resetStats);
+    showTranslateCheckbox.addEventListener('change', toggleTranslate);
+    showHintCheckbox.addEventListener('change', toggleHint);
     
-    // Improved key handling
     document.addEventListener('keydown', handleKeyPress);
 }
 
-// Toggle exclude correct verbs
 function toggleExcludeCorrect() {
-    // If turning on the exclude feature and we already have correctly answered verbs
     if (excludeCorrectCheckbox.checked && correctlyAnsweredVerbs.length > 0) {
-        // Filter out already correct verbs from available verbs
         availableVerbs = parsedVerbs.filter(verb => 
             !correctlyAnsweredVerbs.some(correctVerb => correctVerb.id === verb.id)
         );
@@ -160,7 +182,6 @@ function toggleExcludeCorrect() {
         resetStatsButton.classList.remove('hidden');
         updateRemainingCount();
         
-        // If we've run out of verbs, reset
         if (availableVerbs.length === 0) {
             alert("You've correctly answered all verbs! Resetting the quiz.");
             resetStats();
@@ -168,14 +189,12 @@ function toggleExcludeCorrect() {
             loadNextVerb();
         }
     } else if (!excludeCorrectCheckbox.checked) {
-        // Restore all verbs
         resetAvailableVerbs();
         resetStatsButton.classList.add('hidden');
         loadNextVerb();
     }
 }
 
-// Reset stats and include all verbs
 function resetStats() {
     score = 0;
     total = 0;
@@ -186,39 +205,32 @@ function resetStats() {
     resetStatsButton.classList.add('hidden');
 }
 
-// Handle key presses
 function handleKeyPress(e) {
-    // Don't process key presses during the answer checking period
     if (isCheckingAnswer) return;
     
     if (e.key === 'Enter') {
-        // If in V1 mode and focus is on V2 input, move to V3 input
         if (currentMode === 'v1' && document.activeElement === document.getElementById('v2-input')) {
             e.preventDefault();
             document.getElementById('v3-input').focus();
             return;
         }
         
-        // If in RU mode and focus is on V1 input, move to V2 input
         if (currentMode === 'ru' && document.activeElement === document.getElementById('v1-input')) {
             e.preventDefault();
             document.getElementById('v2-input-ru').focus();
             return;
         }
         
-        // If in RU mode and focus is on V2 input, move to V3 input
         if (currentMode === 'ru' && document.activeElement === document.getElementById('v2-input-ru')) {
             e.preventDefault();
             document.getElementById('v3-input-ru').focus();
             return;
         }
         
-        // Otherwise, check the answer
         checkAnswer();
     }
 }
 
-// Set quiz mode
 function setMode(mode) {
     currentMode = mode;
     
@@ -237,31 +249,24 @@ function setMode(mode) {
     loadNextVerb();
 }
 
-// Toggle form fields enabled/disabled
 function toggleFormFields(disabled) {
-    // Disable/enable all input fields
     document.getElementById('v2-input').disabled = disabled;
     document.getElementById('v3-input').disabled = disabled;
     document.getElementById('v1-input').disabled = disabled;
     document.getElementById('v2-input-ru').disabled = disabled;
     document.getElementById('v3-input-ru').disabled = disabled;
     
-    // Disable/enable the check button
     checkButton.disabled = disabled;
     
-    // Set the checking state
     isCheckingAnswer = disabled;
 }
 
-// Load next verb
 function loadNextVerb() {
-    // If no verbs are loaded yet, show a message
     if (parsedVerbs.length === 0) {
         verbPrompt.textContent = "Waiting for verbs to load...";
         return;
     }
     
-    // Check if we've run out of verbs
     if (availableVerbs.length === 0) {
         verbPrompt.textContent = "You've gone through all verbs!";
         toggleFormFields(true);
@@ -272,41 +277,38 @@ function loadNextVerb() {
         return;
     }
     
-    // Clear previous feedback
     feedback.style.display = 'none';
     correctAnswer.classList.add('hidden');
     
-    // Enable form fields
     toggleFormFields(false);
     
-    // Clear input fields
     document.getElementById('v2-input').value = '';
     document.getElementById('v3-input').value = '';
     document.getElementById('v1-input').value = '';
     document.getElementById('v2-input-ru').value = '';
     document.getElementById('v3-input-ru').value = '';
     
-    // Get random verb
     const randomIndex = Math.floor(Math.random() * availableVerbs.length);
     currentVerb = availableVerbs[randomIndex];
     
-    // Update prompt based on mode
     if (currentMode === 'v1') {
         verbPrompt.textContent = currentVerb.v1;
-        verbPrompt.title = currentVerb.v2 + ' / ' + currentVerb.v3 + ' - ' + currentVerb.ru;
-        document.getElementById('v2-input').focus();
     } else {
         verbPrompt.textContent = currentVerb.ru;
-        verbPrompt.title = currentVerb.v1 + ' / ' + currentVerb.v2 + ' / ' + currentVerb.v3;
+    }
+    
+    updateVerbPrompt();
+    
+    if (currentMode === 'v1') {
+        document.getElementById('v2-input').focus();
+    } else {
         document.getElementById('v1-input').focus();
     }
 }
 
-// Check user's answer
 function checkAnswer() {
     if (!currentVerb || isCheckingAnswer) return;
     
-    // Disable inputs during checking
     toggleFormFields(true);
     
     let isCorrect = false;
@@ -335,7 +337,6 @@ function checkAnswer() {
         }
     }
     
-    // Update feedback
     feedback.textContent = isCorrect ? "Correct!" : "Not quite right";
     feedback.className = isCorrect ? "feedback correct" : "feedback incorrect";
     feedback.style.display = 'block';
@@ -344,20 +345,16 @@ function checkAnswer() {
         correctAnswer.classList.remove('hidden');
     }
     
-    // Update score
     total++;
     if (isCorrect) {
         score++;
         
-        // Add to correctly answered verbs if option is enabled
         if (excludeCorrectCheckbox.checked) {
             correctlyAnsweredVerbs.push(currentVerb);
             
-            // Remove from available verbs
             availableVerbs = availableVerbs.filter(verb => verb.id !== currentVerb.id);
             updateRemainingCount();
             
-            // Show reset button if we have excluded verbs
             if (correctlyAnsweredVerbs.length > 0) {
                 resetStatsButton.classList.remove('hidden');
             }
@@ -365,18 +362,15 @@ function checkAnswer() {
     }
     updateStats();
     
-    // Load next verb after delay
     setTimeout(() => {
         loadNextVerb();
     }, 2000);
 }
 
-// Check if verb forms match (handling multiple possible forms)
 function checkVerbForms(input, expected) {
     input = input.toLowerCase();
     expected = expected.toLowerCase();
     
-    // Handle multiple forms separated by "/"
     if (expected.includes('/')) {
         const variants = expected.split('/');
         return variants.some(variant => input === variant.trim());
@@ -385,7 +379,6 @@ function checkVerbForms(input, expected) {
     return input === expected;
 }
 
-// Update statistics
 function updateStats() {
     scoreElement.textContent = score;
     totalElement.textContent = total;
@@ -393,5 +386,4 @@ function updateStats() {
     percentageElement.textContent = `${percentage}%`;
 }
 
-// Start the quiz
 initQuiz();
