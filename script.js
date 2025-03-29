@@ -47,7 +47,8 @@ function tryLoadDefaultFile() {
         })
         .then(data => {
             processVerbFile(data);
-            fileStatus.textContent = 'Successfully loaded irregular_verbs.txt';
+            let itemsCount = data.split(/\r?\n/).filter(line => line.trim() !== "").length;
+            fileStatus.textContent = `Successfully loaded default file (${itemsCount} items)`;
         })
         .catch(error => {
             console.error('Error loading default file:', error);
