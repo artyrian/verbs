@@ -75,8 +75,15 @@
         </div>
         
         <div class="stats">
-            <p>Score: <span id="score">0</span> correct out of <span id="total">0</span> (<span id="percentage">0%</span>)</p>
-            <p>Remaining verbs: <span id="remaining-verbs">0</span></p>
+            <div class="stats-row">
+                <p>Score: <span id="score">0</span> correct out of <span id="total">0</span> (<span id="percentage">0%</span>)</p>
+            </div>
+            <div class="stats-row">
+                <p>Learned verbs: <span id="learned-percent">0%</span> of all unique verbs</p>
+            </div>
+            <div class="stats-row">
+                <p>Remaining verbs: <span id="remaining-verbs">0</span></p>
+            </div>
             <button id="reset-stats" class="reset-stats hidden">Reset Stats & Include All Verbs</button>
         </div>
     </div>

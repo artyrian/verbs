@@ -29,6 +29,7 @@ const correctAnswer = document.getElementById('correct-answer');
 const scoreElement = document.getElementById('score');
 const totalElement = document.getElementById('total');
 const percentageElement = document.getElementById('percentage');
+const learnedPercentElement = document.getElementById('learned-percent');
 const remainingVerbsElement = document.getElementById('remaining-verbs');
 const fileInput = document.getElementById('verb-file');
 const fileStatus = document.getElementById('file-status');
@@ -350,9 +351,14 @@ function checkAnswer() {
     if (isCorrect) {
         score++;
         
-        if (excludeCorrectCheckbox.checked) {
+        // Check if this verb was already correctly answered
+        const alreadyAnswered = correctlyAnsweredVerbs.some(verb => verb.id === currentVerb.id);
+        
+        if (!alreadyAnswered) {
             correctlyAnsweredVerbs.push(currentVerb);
-            
+        }
+        
+        if (excludeCorrectCheckbox.checked) {
             availableVerbs = availableVerbs.filter(verb => verb.id !== currentVerb.id);
             updateRemainingCount();
             
@@ -381,10 +387,17 @@ function checkVerbForms(input, expected) {
 }
 
 function updateStats() {
+    // Update attempt success rate
     scoreElement.textContent = score;
     totalElement.textContent = total;
     const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
     percentageElement.textContent = `${percentage}%`;
+    
+    // Update learned verbs percentage
+    const totalUniqueVerbs = parsedVerbs.length;
+    const learnedVerbs = correctlyAnsweredVerbs.length;
+    const learnedPercentage = totalUniqueVerbs > 0 ? Math.round((learnedVerbs / totalUniqueVerbs) * 100) : 0;
+    learnedPercentElement.textContent = `${learnedPercentage}%`;
 }
 
 initQuiz();
