@@ -124,23 +124,13 @@ function updateVerbPrompt() {
     
     verbPrompt.title = '';
     
-    if (currentMode === 'v1') {
-        if (showTranslate) {
-            verbPrompt.title = showHint 
-                ? `${currentVerb.v2} / ${currentVerb.v3} - ${currentVerb.ru}`
-                : `${currentVerb.ru}`;
-        } else if (showHint) {
-            verbPrompt.title = `${currentVerb.v2} / ${currentVerb.v3}`;
-        }
-    } else {
-        if (showHint) {
-            verbPrompt.title = showTranslate 
-                ? `${currentVerb.v1} / ${currentVerb.v2} / ${currentVerb.v3} - ${currentVerb.ru}`
-                : `${currentVerb.v1} / ${currentVerb.v2} / ${currentVerb.v3}`;
-        } else if (showTranslate) {
-            verbPrompt.title = `${currentVerb.v1}`;
-        }
+    const hintText = getHintText();
+    if (hintText) {
+        verbPrompt.title = hintText;
     }
+    
+    // Add click event listener for mobile devices
+    verbPrompt.onclick = toggleHintVisibility;
 }
 
 function initQuiz() {
@@ -171,6 +161,8 @@ function initQuiz() {
     resetStatsButton.addEventListener('click', resetStats);
     showTranslateCheckbox.addEventListener('change', toggleTranslate);
     showHintCheckbox.addEventListener('change', toggleHint);
+    verbPrompt.addEventListener('click', toggleHintVisibility);
+
     
     document.addEventListener('keydown', handleKeyPress);
 }
@@ -409,6 +401,60 @@ function updateStats() {
     const learnedVerbs = correctlyAnsweredVerbs.length;
     const learnedPercentage = totalUniqueVerbs > 0 ? Math.round((learnedVerbs / totalUniqueVerbs) * 100) : 0;
     learnedPercentElement.textContent = `${learnedPercentage}%`;
+}
+
+function toggleHintVisibility() {
+    if (!currentVerb) return;
+    
+    const hintText = getHintText();
+    if (hintText) {
+        showMobileHint(hintText);
+    }
+}
+
+function getHintText() {
+    if (!currentVerb) return '';
+    
+    if (currentMode === 'v1') {
+        if (showTranslate && showHint) {
+            return `${currentVerb.v2} / ${currentVerb.v3} - ${currentVerb.ru}`;
+        } else if (showTranslate) {
+            return `${currentVerb.ru}`;
+        } else if (showHint) {
+            return `${currentVerb.v2} / ${currentVerb.v3}`;
+        }
+    } else {
+        if (showHint && showTranslate) {
+            return `${currentVerb.v1} / ${currentVerb.v2} / ${currentVerb.v3} - ${currentVerb.ru}`;
+        } else if (showTranslate) {
+            return `${currentVerb.v1}`;
+        } else if (showHint) {
+            return `${currentVerb.v1} / ${currentVerb.v2} / ${currentVerb.v3}`;
+        }
+    }
+    return '';
+}
+
+function showMobileHint(text) {
+    // Check if hint element already exists
+    let hintElement = document.getElementById('mobile-hint');
+    
+    if (!hintElement) {
+        // Create hint element if it doesn't exist
+        hintElement = document.createElement('div');
+        hintElement.id = 'mobile-hint';
+        hintElement.className = 'mobile-hint';
+        document.querySelector('.quiz-container').insertBefore(hintElement, feedback);
+    }
+    
+    // Update hint text and show it
+    hintElement.textContent = text;
+    hintElement.style.display = 'block';
+    
+    // Hide hint after 3 seconds
+    setTimeout(() => {
+        hintElement.style.display = 'none';
+    }, 3000);
 }
 
 initQuiz();

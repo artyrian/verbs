@@ -308,3 +308,21 @@ input[type="file"] {
         font-size: 20px;
     }
 }
+
+.mobile-hint {
+    display: none;
+    background-color: #f0f7ff;
+    border: 1px solid #0066cc;
+    color: #333;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+    text-align: center;
+    font-weight: bold;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
