@@ -23,8 +23,10 @@ open index.html
 To expand the list of verbs edit file irregular_verbs.txt.
 Format:
 ```
-v1 - v2 - v3 - ru translate
+v1 - v2/v2_2 - v3/v3_2 - ru translate
 ```
+
+Use `/` to separete different options for verb form.
 
 
 ## 📜 License  
