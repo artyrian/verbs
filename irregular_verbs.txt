@@ -20,7 +20,7 @@ build - built - built - строить
 burn - burnt/burned - burnt/burned - жечь
 burst - burst - burst - разрываться
 buy - bought - bought - покупать
-cast - cast - cast - бросать
+cast - cast - cast - бросать (более мягко, в воздух)
 catch - caught - caught - ловить
 choose - chose - chosen - выбирать
 cling - clung - clung - цепляться
@@ -42,7 +42,7 @@ feel - felt - felt - чувствовать
 fight - fought - fought - бороться
 find - found - found - находить
 flee - fled - fled - бежать/избегать (негативное)
-fling - flung - flung - бросать (сильно, резко)
+fling - flung - flung - бросать (сильно, резко) / метать
 fly - flew - flown - летать
 forbid - forbade - forbidden - запрещать
 forget - forgot - forgotten - забывать
