@@ -301,11 +301,19 @@ function loadNextVerb() {
     
     updateVerbPrompt();
     
-    if (currentMode === 'v1') {
-        document.getElementById('v2-input').focus();
-    } else {
-        document.getElementById('v1-input').focus();
-    }
+    // Focus on the first input field
+    focusFirstField();
+}
+
+function focusFirstField() {
+    // Adding a small delay to ensure the field is focusable when the keyboard needs to appear
+    setTimeout(() => {
+        if (currentMode === 'v1') {
+            document.getElementById('v2-input').focus();
+        } else {
+            document.getElementById('v1-input').focus();
+        }
+    }, 100);
 }
 
 function checkAnswer() {
@@ -369,10 +377,13 @@ function checkAnswer() {
     }
     updateStats();
     
+    // After checking the answer, load the next verb after a delay
     setTimeout(() => {
         loadNextVerb();
+        // The focusFirstField function is already called within loadNextVerb
     }, 2000);
 }
+
 
 function checkVerbForms(input, expected) {
     input = input.toLowerCase();
