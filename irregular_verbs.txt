@@ -62,7 +62,7 @@ hold - held - held - держать
 hurt - hurt - hurt - причинять боль
 keep - kept - kept - хранить
 know - knew - known - знать
-lay - laid - laid - класть
+lay - laid - laid - класть, положить, покрывать (чаще что-то горизонтально)
 lead - led - led - вести
 lean - leant/leaned - leant/leaned - наклоняться
 leap - leapt/leaped - leapt/leaped - прыгать
@@ -77,7 +77,7 @@ make - made - made - делать
 mean - meant - meant - значить
 meet - met - met - встречать
 pay - paid - paid - платить
-put - put - put - класть
+put - put - put - ставить, помещать, класть
 read - read - read - читать
 ride - rode - ridden - ездить верхом
 ring - rang - rung - звонить
