@@ -299,16 +299,6 @@ input[type="file"] {
     font-size: 14px;
 }
 
-@media (max-width: 320px) {
-    .container {
-        padding: 15px 10px;
-    }
-    
-    .compact-header h1 {
-        font-size: 20px;
-    }
-}
-
 .mobile-hint {
     display: none;
     background-color: #f0f7ff;
@@ -316,13 +306,22 @@ input[type="file"] {
     color: #333;
     padding: 10px;
     border-radius: 5px;
-    margin: 10px 0;
+    margin: 15px 0;
     text-align: center;
     font-weight: bold;
-    animation: fadeIn 0.3s;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+* Make the verb prompt look tappable on mobile */
+.verb-prompt {
+    -webkit-tap-highlight-color: rgba(0,102,204,0.1); /* iOS tap highlight */
+    user-select: none; /* Prevent text selection on tap */
+}
+
+@media (max-width: 767px) {
+    .verb-prompt:after {
+        content: " (tap for hint)";
+        font-size: 14px;
+        font-weight: normal;
+        opacity: 0.7;
+    }
 }

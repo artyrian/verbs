@@ -458,3 +458,45 @@ function showMobileHint(text) {
 }
 
 initQuiz();
+
+const mobileHintElement = document.createElement('div');
+mobileHintElement.id = 'mobile-hint';
+mobileHintElement.className = 'mobile-hint';
+document.querySelector('.quiz-container').insertBefore(mobileHintElement, feedback);
+
+// Add a simple tap handler for the verb prompt
+document.getElementById('verb-prompt').addEventListener('click', function() {
+    if (!currentVerb) return;
+    
+    let hintText = '';
+    
+    // Generate the hint text based on the current mode and settings
+    if (currentMode === 'v1') {
+        if (showTranslate && showHint) {
+            hintText = `${currentVerb.v2} / ${currentVerb.v3} - ${currentVerb.ru}`;
+        } else if (showTranslate) {
+            hintText = `${currentVerb.ru}`;
+        } else if (showHint) {
+            hintText = `${currentVerb.v2} / ${currentVerb.v3}`;
+        }
+    } else {
+        if (showHint && showTranslate) {
+            hintText = `${currentVerb.v1} / ${currentVerb.v2} / ${currentVerb.v3} - ${currentVerb.ru}`;
+        } else if (showTranslate) {
+            hintText = `${currentVerb.v1}`;
+        } else if (showHint) {
+            hintText = `${currentVerb.v1} / ${currentVerb.v2} / ${currentVerb.v3}`;
+        }
+    }
+    
+    // Only show the hint if there's text to display
+    if (hintText) {
+        mobileHintElement.textContent = hintText;
+        mobileHintElement.style.display = 'block';
+        
+        // Hide the hint after 3 seconds
+        setTimeout(function() {
+            mobileHintElement.style.display = 'none';
+        }, 3000);
+    }
+});
