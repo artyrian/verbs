@@ -21,11 +21,75 @@ h1 {
     margin-bottom: 30px;
 }
 
-.file-input {
-    margin-bottom: 20px;
-    text-align: center;
+.compact-header {
+    margin-bottom: 15px;
 }
 
+.compact-header h1 {
+    margin-bottom: 5px;
+    font-size: 24px;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.instruction {
+    margin: 0;
+    font-size: 14px;
+}
+
+.github-link {
+    display: flex;
+    align-items: center;
+    color: #0066cc;
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    font-size: 14px;
+}
+
+.github-link:hover {
+    background-color: #f0f7ff;
+    text-decoration: underline;
+}
+
+.github-link svg {
+    margin-right: 4px;
+}
+
+.controls-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.file-input {
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.file-status {
+    margin-top: 2px;
+    font-size: 12px;
+}
+
+.mode-selector {
+    margin-bottom: 0;
+}
+
+.options-container {
+    margin: 10px 0;
+    padding: 10px;
+}
 .quiz-container {
     margin-top: 20px;
 }
@@ -202,15 +266,15 @@ button:disabled {
     margin-bottom: 20px;
 }
 
-.github-link {
+github-link {
     display: flex;
     align-items: center;
     color: #0066cc;
     text-decoration: none;
-    padding: 6px 12px;
+    padding: 4px 8px;
     border-radius: 4px;
     transition: background-color 0.2s;
-    font-weight: 500;
+    font-size: 14px;
 }
 
 .github-link:hover {
@@ -219,5 +283,33 @@ button:disabled {
 }
 
 .github-link svg {
-    margin-right: 6px;
+    margin-right: 4px;
+}
+
+.controls-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.file-input {
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.file-status {
+    margin-top: 2px;
+    font-size: 12px;
+}
+
+.mode-selector {
+    margin-bottom: 0;
+}
+
+.options-container {
+    margin: 10px 0;
+    padding: 10px;
 }
